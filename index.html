@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日市場監測系統 | Daily Market Monitor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --green: #3fb950;
+    --green-dim: #1a4726;
+    --red: #f85149;
+    --yellow: #d29922;
+    --blue: #58a6ff;
+    --blue-dim: #0d2340;
+    --purple: #bc8cff;
+    --fire: #ff7b00;
+    --fire-dim: #3d1a00;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1f35 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(88,166,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--blue-dim); border: 1px solid rgba(88,166,255,0.3);
+    color: var(--blue); font-size: 11px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+  .hero h1 span { color: var(--blue); }
+  .hero p {
+    font-size: 14px; color: var(--text-muted);
+    max-width: 520px; margin: 0 auto 28px; line-height: 1.7;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue); color: #0d1117;
+    font-weight: 700; font-size: 13px;
+    padding: 10px 22px; border-radius: 8px;
+    text-decoration: none; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+    font-weight: 500; font-size: 13px;
+    padding: 10px 22px; border-radius: 8px;
+    text-decoration: none; transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+  }
+  .stats-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .stat-item {
+    padding: 18px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; }
+  .stat-value { font-size: 22px; font-weight: 700; margin-top: 4px; color: var(--blue); }
+  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  /* section heading */
+  .section-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 15px; font-weight: 700;
+    color: var(--text); letter-spacing: 0.02em;
+  }
+  .section-title span { color: var(--text-muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+
+  /* ── LATEST CARD ── */
+  .latest-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--fire);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 36px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 20px;
+    transition: border-color 0.2s;
+  }
+  .latest-card:hover { border-color: var(--fire); }
+  .latest-label {
+    font-size: 11px; font-weight: 700; color: var(--fire);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
+  }
+  .latest-date { font-size: 24px; font-weight: 700; }
+  .latest-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .latest-signals { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .sig-chip {
+    font-size: 12px; padding: 4px 12px; border-radius: 20px;
+    font-weight: 600; white-space: nowrap;
+  }
+  .sig-chip.fire { background: var(--fire-dim); color: var(--fire); }
+  .sig-chip.wait { background: #3d2b0a; color: var(--yellow); }
+  .sig-chip.exit { background: #4a1212; color: var(--red); }
+  .btn-view {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--fire); color: #0d1117;
+    font-weight: 700; font-size: 13px;
+    padding: 10px 22px; border-radius: 8px;
+    text-decoration: none; white-space: nowrap;
+    transition: opacity 0.2s; flex-shrink: 0;
+  }
+  .btn-view:hover { opacity: 0.85; }
+
+  /* ── WATCHLIST ── */
+  .watchlist {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 36px;
+  }
+  .watchlist-title { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .watchlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .wl-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    text-align: center;
+  }
+  .wl-ticker { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+  .wl-name { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .wl-badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 10px; margin-top: 6px;
+  }
+  .wl-badge.tw { background: #0d2340; color: var(--blue); }
+  .wl-badge.us { background: #1a4726; color: var(--green); }
+  .wl-badge.etf { background: var(--fire-dim); color: var(--fire); }
+
+  /* ── REPORTS TABLE ── */
+  .reports-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 36px;
+  }
+  .reports-table table { width: 100%; border-collapse: collapse; }
+  .reports-table th {
+    background: var(--surface2);
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 12px 20px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .reports-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; vertical-align: middle;
+  }
+  .reports-table tr:last-child td { border-bottom: none; }
+  .reports-table tr:hover td { background: var(--surface2); }
+  .report-date { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .report-link {
+    color: var(--blue); text-decoration: none; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .report-link:hover { text-decoration: underline; }
+  .report-new {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    background: var(--green-dim); color: var(--green);
+    padding: 2px 7px; border-radius: 10px; margin-left: 6px;
+  }
+  .signals-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+  .mini-chip {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+  }
+  .mini-chip.fire { background: var(--fire-dim); color: var(--fire); }
+  .mini-chip.wait { background: #3d2b0a; color: var(--yellow); }
+  .mini-chip.exit { background: #4a1212; color: var(--red); }
+
+  /* ── LOADING / EMPTY ── */
+  .loading {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-muted); font-size: 13px;
+  }
+  .loading .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── SETUP NOTICE ── */
+  .setup-notice {
+    background: var(--blue-dim);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 10px; padding: 16px 20px;
+    font-size: 13px; color: var(--blue);
+    margin-bottom: 28px; line-height: 1.7;
+  }
+  .setup-notice strong { color: var(--text); }
+  .setup-notice code {
+    background: rgba(88,166,255,0.1); padding: 1px 6px;
+    border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 11px; color: var(--text-muted); line-height: 1.9;
+  }
+  footer a { color: var(--blue); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 700px) {
+    .stats-inner { grid-template-columns: repeat(2,1fr); }
+    .stat-item:nth-child(2) { border-right: none; }
+    .latest-card { flex-direction: column; }
+    .btn-view { width: 100%; justify-content: center; }
+    .reports-table td, .reports-table th { padding: 10px 14px; }
+    .signals-cell { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">📊 AI-Powered Market Intelligence</div>
+  <h1>每日市場<span>監測系統</span></h1>
+  <p>結合 AI 基金經理人視角，每個交易日自動蒐集台美股數據，產出技術面 × 量價面綜合診斷報告。</p>
+  <div class="hero-actions">
+    <a href="#latest" class="btn-primary" id="btn-latest">📄 查看最新報告</a>
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" class="btn-secondary" id="github-link">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STATS BAR
+══════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-label">監測商品</div>
+      <div class="stat-value">6</div>
+      <div class="stat-sub">台股 + 美股 + ETF</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">報告總數</div>
+      <div class="stat-value" id="total-reports">—</div>
+      <div class="stat-sub">歷史報告</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">最新報告</div>
+      <div class="stat-value" id="latest-date-stat" style="font-size:15px;margin-top:6px">—</div>
+      <div class="stat-sub">上次更新</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">排程狀態</div>
+      <div class="stat-value" style="color:var(--green);font-size:15px;margin-top:6px">● 運行中</div>
+      <div class="stat-sub">週一至週五 15:00</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN
+══════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Setup notice (hidden after config) -->
+  <div class="setup-notice" id="setup-notice">
+    ⚙️ <strong>部署設定：</strong>
+    請開啟此 <code>index.html</code>，將頂部 JavaScript 設定區的
+    <code>GITHUB_USER</code> 改為您的 GitHub 帳號，
+    <code>GITHUB_REPO</code> 改為您的倉庫名稱，
+    即可自動列出所有報告。
+  </div>
+
+  <!-- Latest Report -->
+  <div id="latest" style="margin-bottom:12px">
+    <div class="section-head">
+      <div class="section-title">最新報告 <span id="latest-sub"></span></div>
+    </div>
+  </div>
+  <div id="latest-card-container">
+    <div class="loading"><div class="spinner"></div>載入最新報告中…</div>
+  </div>
+
+  <!-- Watchlist -->
+  <div style="margin-top:36px;margin-bottom:12px">
+    <div class="section-head">
+      <div class="section-title">監測商品清單</div>
+    </div>
+  </div>
+  <div class="watchlist">
+    <div class="watchlist-title">📋 Current Watchlist</div>
+    <div class="watchlist-grid">
+      <div class="wl-item">
+        <div class="wl-ticker">0050</div>
+        <div class="wl-name">元大台灣50</div>
+        <span class="wl-badge etf">市值ETF</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">2330</div>
+        <div class="wl-name">台積電</div>
+        <span class="wl-badge tw">台股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">2317</div>
+        <div class="wl-name">鴻海</div>
+        <span class="wl-badge tw">台股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">NVDA</div>
+        <div class="wl-name">NVIDIA</div>
+        <span class="wl-badge us">美股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">AAPL</div>
+        <div class="wl-name">Apple</div>
+        <span class="wl-badge us">美股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">GOOG</div>
+        <div class="wl-name">Alphabet</div>
+        <span class="wl-badge us">美股個股</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports History -->
+  <div class="section-head">
+    <div class="section-title">歷史報告 <span id="history-count"></span></div>
+  </div>
+  <div class="reports-table" id="reports-table-container">
+    <div class="loading"><div class="spinner"></div>從 GitHub 載入報告列表中…</div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div>每日市場監測系統 · 由 <strong>Claude AI + Cowork</strong> 自動生成</div>
+  <div>資料來源：<a href="https://tw.stock.yahoo.com" target="_blank">Yahoo Finance 台灣版</a> · 每個交易日 15:00 自動更新</div>
+  <div style="margin-top:6px;font-size:10px">⚠️ 本系統報告僅供技術面參考，不構成任何投資建議。</div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   ⚙️  設定區 — 請修改以下兩個值
+════════════════════════════════════════ */
+const GITHUB_USER = 'teetzyyyang-910';   // ← 改成您的 GitHub 帳號
+const GITHUB_REPO = 'stockmarket_report';       // ← 改成您的 GitHub 倉庫名稱
+const GITHUB_BRANCH = 'main';          // 通常是 main 或 master
+/* ════════════════════════════════════════ */
+
+const IS_CONFIGURED = GITHUB_USER !== 'YOUR_USERNAME';
+const API_BASE = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents`;
+const PAGES_BASE = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}`;
+
+// Update GitHub link
+if (IS_CONFIGURED) {
+  document.getElementById('github-link').href = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}`;
+  document.getElementById('setup-notice').style.display = 'none';
+}
+
+// Parse date from filename: market_report_YYYYMMDD.html
+function parseDateFromFilename(name) {
+  const m = name.match(/market_report_(\d{4})(\d{2})(\d{2})\.html$/);
+  if (!m) return null;
+  return { raw: `${m[1]}-${m[2]}-${m[3]}`, display: `${m[1]}/${m[2]}/${m[3]}`, year: m[1], month: m[2], day: m[3] };
+}
+
+function formatDateDisplay(dateStr) {
+  const d = new Date(dateStr);
+  const weekdays = ['日','一','二','三','四','五','六'];
+  return `${dateStr} (週${weekdays[d.getDay()]})`;
+}
+
+// Render latest card
+function renderLatestCard(file) {
+  const date = parseDateFromFilename(file.name);
+  if (!date) return;
+  const reportUrl = IS_CONFIGURED ? `${PAGES_BASE}/${file.name}` : file.name;
+  document.getElementById('latest-sub').textContent = date.display;
+  document.getElementById('latest-date-stat').textContent = date.display;
+  document.getElementById('btn-latest').href = reportUrl;
+  document.getElementById('latest-card-container').innerHTML = `
+    <div class="latest-card">
+      <div>
+        <div class="latest-label">🔥 最新報告</div>
+        <div class="latest-date">${date.display}</div>
+        <div class="latest-meta">${formatDateDisplay(date.raw)}</div>
+        <div class="latest-signals">
+          <span class="sig-chip fire">🔥 進場訊號</span>
+          <span class="sig-chip wait">⏳ 觀望</span>
+          <span class="sig-chip wait">⏳ 觀望</span>
+          <span class="sig-chip wait">⏳ 觀望</span>
+          <span class="sig-chip wait">⏳ 觀望</span>
+          <span class="sig-chip wait">⏳ 觀望</span>
+        </div>
+      </div>
+      <a href="${reportUrl}" class="btn-view" target="_blank">查看報告 →</a>
+    </div>`;
+}
+
+// Render history table
+function renderTable(files) {
+  if (files.length === 0) {
+    document.getElementById('reports-table-container').innerHTML =
+      '<div class="loading" style="padding:40px">尚無歷史報告</div>';
+    return;
+  }
+  document.getElementById('total-reports').textContent = files.length;
+  document.getElementById('history-count').textContent = `(共 ${files.length} 份)`;
+
+  const rows = files.map((f, i) => {
+    const date = parseDateFromFilename(f.name);
+    if (!date) return '';
+    const reportUrl = IS_CONFIGURED ? `${PAGES_BASE}/${f.name}` : f.name;
+    const isNew = i === 0;
+    return `
+      <tr>
+        <td><span class="report-date">${date.display}</span>${isNew ? '<span class="report-new">NEW</span>' : ''}</td>
+        <td>${formatDateDisplay(date.raw)}</td>
+        <td class="signals-cell">
+          <span class="mini-chip fire">🔥 1</span>
+          <span class="mini-chip wait">⏳ 5</span>
+        </td>
+        <td>
+          <a href="${reportUrl}" class="report-link" target="_blank">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z"/><path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z"/></svg>
+            開啟報告
+          </a>
+        </td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('reports-table-container').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>日期</th>
+          <th>星期</th>
+          <th>訊號摘要</th>
+          <th>連結</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// Fetch reports from GitHub API
+async function loadReports() {
+  if (!IS_CONFIGURED) {
+    // Show demo mode with current file
+    const demoFiles = [{ name: 'market_report_20260522.html' }];
+    renderLatestCard(demoFiles[0]);
+    renderTable(demoFiles);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}?ref=${GITHUB_BRANCH}`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
+
+    if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
+    const files = await res.json();
+
+    // Filter market report files, sort newest first
+    const reports = files
+      .filter(f => f.name.match(/^market_report_\d{8}\.html$/))
+      .sort((a, b) => b.name.localeCompare(a.name));
+
+    if (reports.length === 0) {
+      document.getElementById('latest-card-container').innerHTML =
+        '<div class="loading">尚無報告，等待第一次排程執行後自動出現。</div>';
+      renderTable([]);
+      return;
+    }
+
+    renderLatestCard(reports[0]);
+    renderTable(reports);
+
+  } catch (err) {
+    console.error(err);
+    // Graceful fallback: show static entry for today's report
+    const today = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const todayStr = `${today.getFullYear()}${pad(today.getMonth()+1)}${pad(today.getDate())}`;
+    const fallback = [{ name: `market_report_${todayStr}.html` }];
+    renderLatestCard(fallback[0]);
+    renderTable(fallback);
+    document.getElementById('total-reports').textContent = '—';
+
+    // Show API error hint
+    const notice = document.createElement('div');
+    notice.style.cssText = 'background:#3d1a00;border:1px solid rgba(255,123,0,.3);border-radius:8px;padding:12px 16px;font-size:12px;color:#ff7b00;margin-bottom:20px';
+    notice.innerHTML = `⚠️ 無法連線 GitHub API（可能需要在 repo Settings → Pages 啟用 GitHub Pages）。報告檔案顯示為靜態連結。`;
+    document.querySelector('.main').insertBefore(notice, document.getElementById('latest'));
+  }
+}
+
+loadReports();
+</script>
+</body>
+</html>

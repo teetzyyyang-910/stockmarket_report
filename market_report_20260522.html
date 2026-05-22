@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日市場監測報告 | 2026/05/22</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --green: #3fb950;
+    --green-dim: #1a4726;
+    --red: #f85149;
+    --red-dim: #4a1212;
+    --yellow: #d29922;
+    --yellow-dim: #3d2b0a;
+    --blue: #58a6ff;
+    --blue-dim: #0d2340;
+    --fire: #ff7b00;
+    --fire-dim: #3d1a00;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 20px 60px;
+  }
+
+  .header {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+  }
+  .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.03em; }
+  .header-left .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .header-right { text-align: right; font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+  .header-right strong { color: var(--blue); }
+
+  /* data source badge */
+  .source-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #0d2340; border: 1px solid #1a4060;
+    color: var(--blue); font-size: 11px; font-weight: 600;
+    padding: 3px 9px; border-radius: 20px; margin-top: 4px;
+  }
+
+  /* market context bar */
+  .market-bar {
+    max-width: 1200px;
+    margin: 0 auto 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .market-bar .label { color: var(--text-muted); }
+  .market-bar .val { font-weight: 700; color: var(--green); }
+  .market-bar .divider { color: var(--border); margin: 0 8px; }
+
+  .summary-bar {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .summary-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .summary-icon { font-size: 28px; }
+  .summary-label { font-size: 12px; color: var(--text-muted); }
+  .summary-count { font-size: 28px; font-weight: 700; line-height: 1.1; }
+  .count-fire { color: var(--fire); }
+  .count-wait { color: var(--yellow); }
+  .count-exit { color: var(--red); }
+
+  .cards-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .card.signal-fire { border-top: 3px solid var(--fire); }
+  .card.signal-wait { border-top: 3px solid var(--yellow); }
+
+  .card-header {
+    padding: 18px 20px 12px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .card-title-group .ticker { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
+  .card-title-group .name { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .signal-badge {
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
+    border-radius: 20px; white-space: nowrap; letter-spacing: 0.04em;
+  }
+  .badge-fire { background: var(--fire-dim); color: var(--fire); }
+  .badge-wait { background: var(--yellow-dim); color: var(--yellow); }
+
+  .price-row {
+    padding: 0 20px 14px;
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .price { font-size: 26px; font-weight: 700; }
+  .change { font-size: 14px; font-weight: 500; }
+  .change.up   { color: var(--green); }
+  .change.down { color: var(--red); }
+  .asset-tag {
+    margin-left: auto; font-size: 11px; padding: 3px 8px;
+    border-radius: 5px; background: var(--surface2);
+    color: var(--text-muted); border: 1px solid var(--border);
+  }
+  .new-high-tag {
+    font-size: 11px; padding: 3px 8px; border-radius: 5px;
+    background: #1a4726; color: var(--green); border: 1px solid #2a6636;
+    font-weight: 600;
+  }
+
+  .ohlc-row {
+    padding: 0 20px 14px;
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 6px;
+  }
+  .ohlc-item { background: var(--surface2); border-radius: 6px; padding: 7px 10px; }
+  .ohlc-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .ohlc-val { font-size: 13px; font-weight: 600; margin-top: 2px; }
+
+  .metrics {
+    padding: 0 20px 14px;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
+  }
+  .metric { background: var(--surface2); border-radius: 8px; padding: 10px 12px; }
+  .metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-value { font-size: 14px; font-weight: 600; margin-top: 3px; }
+  .metric-value.bull { color: var(--green); }
+  .metric-value.bear { color: var(--red); }
+  .metric-value.neut { color: var(--yellow); }
+  .metric-value.info { color: var(--blue); }
+
+  .vol-section { padding: 0 20px 14px; }
+  .vol-label {
+    font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+    display: flex; justify-content: space-between;
+  }
+  .vol-bar-bg { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .vol-bar-fill { height: 100%; border-radius: 4px; }
+
+  .indicators { padding: 0 20px 14px; }
+  .ind-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .ind-name { font-size: 11px; color: var(--text-muted); width: 56px; flex-shrink: 0; }
+  .ind-bar-bg { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .ind-bar-fill { height: 100%; border-radius: 3px; }
+  .ind-val { font-size: 11px; font-weight: 600; width: 52px; text-align: right; }
+
+  .ma-row { padding: 0 20px 14px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .ma-chip {
+    font-size: 11px; padding: 4px 9px; border-radius: 5px; border: 1px solid var(--border);
+  }
+  .ma-chip.above { color: var(--green); border-color: #1a4726; background: #0d1f12; }
+  .ma-chip.below { color: var(--red);   border-color: #4a1212; background: #1a0808; }
+
+  .divider { height: 1px; background: var(--border); margin: 0 20px 14px; }
+
+  .analysis { padding: 0 20px 18px; flex: 1; }
+  .analysis-section { margin-bottom: 10px; }
+  .analysis-label {
+    font-size: 10px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .analysis-text { font-size: 12.5px; line-height: 1.65; color: #c9d1d9; }
+
+  .action-box {
+    margin: 0 20px 18px; padding: 12px 14px;
+    border-radius: 8px; font-size: 12px; line-height: 1.7;
+  }
+  .action-box.fire { background: var(--fire-dim); border: 1px solid rgba(255,123,0,0.35); }
+  .action-box.wait { background: var(--yellow-dim); border: 1px solid rgba(210,153,34,0.35); }
+  .action-box .al { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .action-box.fire .al { color: var(--fire); }
+  .action-box.wait .al { color: var(--yellow); }
+
+  .correction-note {
+    margin: 0 20px 10px; padding: 6px 10px;
+    background: #0d2340; border: 1px solid #1a4060;
+    border-radius: 6px; font-size: 11px; color: var(--blue);
+  }
+
+  .footer {
+    max-width: 1200px; margin: 40px auto 0;
+    text-align: center; font-size: 11px;
+    color: var(--text-muted); line-height: 1.8;
+    border-top: 1px solid var(--border); padding-top: 20px;
+  }
+
+  @media(max-width: 800px) {
+    .summary-bar { grid-template-columns: 1fr; }
+    .cards-grid  { grid-template-columns: 1fr; }
+    .market-bar  { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>📊 每日市場監測報告</h1>
+    <div class="subtitle">基金經理人技術面 × 量價面綜合診斷系統</div>
+  </div>
+  <div class="header-right">
+    <div>報告日期：<strong>2026 / 05 / 22</strong></div>
+    <div class="source-badge">✅ 資料來源：Yahoo Finance 台灣版（直接抓取）</div>
+    <div style="margin-top:4px">台股收盤 14:30 ｜ 美股前日收盤價</div>
+  </div>
+</div>
+
+<!-- 大盤概況 -->
+<div class="market-bar">
+  <span>🇹🇼 台股大盤</span>
+  <span class="val">42,267.97</span>
+  <span style="color:var(--green);font-size:13px">▲ +899.76 (+2.18%)</span>
+  <span class="divider">|</span>
+  <span class="label">創歷史收盤新高</span>
+  <span class="divider">|</span>
+  <span class="label">成交值</span>
+  <span class="val">1兆1,884億</span>
+  <span class="divider">|</span>
+  <span class="label">外資買超</span>
+  <span class="val" style="color:var(--green)">+761億（史上第4大）</span>
+</div>
+
+<!-- SUMMARY BAR -->
+<div class="summary-bar">
+  <div class="summary-card">
+    <div class="summary-icon">🔥</div>
+    <div>
+      <div class="summary-label">進場訊號觸發</div>
+      <div class="summary-count count-fire">1</div>
+    </div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-icon">⏳</div>
+    <div>
+      <div class="summary-label">持續觀望</div>
+      <div class="summary-count count-wait">5</div>
+    </div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-icon">🚨</div>
+    <div>
+      <div class="summary-label">建議出場/減碼</div>
+      <div class="summary-count count-exit">0</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARDS GRID -->
+<div class="cards-grid">
+
+  <!-- 0050 🔥 -->
+  <div class="card signal-fire">
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="ticker">0050</div>
+        <div class="name">元大台灣50 ETF</div>
+      </div>
+      <span class="signal-badge badge-fire">🔥 進場訊號觸發</span>
+    </div>
+    <div class="price-row">
+      <span class="price">NT$97.30</span>
+      <span class="change up">▲ +1.45 (+1.51%)</span>
+      <span class="asset-tag">市值型 ETF</span>
+    </div>
+    <div class="ohlc-row">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">96.30</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val" style="color:var(--green)">97.30</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">96.00</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">95.85</div></div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">成交量</div>
+        <div class="metric-value info">60,838 張</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">昨量</div>
+        <div class="metric-value bull">59,337 張</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">量能比</div>
+        <div class="metric-value bull">+2.5% 放量</div>
+      </div>
+    </div>
+    <div class="indicators">
+      <div class="ind-row">
+        <span class="ind-name">日 MA</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:92%;background:var(--green)"></div></div>
+        <span class="ind-val" style="color:var(--green)">強力買進</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">週 MA</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:95%;background:var(--green)"></div></div>
+        <span class="ind-val" style="color:var(--green)">強力買進</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">振盪指標</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:50%;background:var(--yellow)"></div></div>
+        <span class="ind-val" style="color:var(--yellow)">中性</span>
+      </div>
+    </div>
+    <div class="ma-row">
+      <span class="ma-chip above">5MA ✓ 上方</span>
+      <span class="ma-chip above">20MA ✓ 上方</span>
+      <span class="ma-chip above">60MA ✓ 上方</span>
+    </div>
+    <div class="divider"></div>
+    <div class="analysis">
+      <div class="analysis-section">
+        <div class="analysis-label">資產診斷</div>
+        <div class="analysis-text">今日收盤 NT$97.30 觸及日內最高，成交量 60,838 張較昨日 59,337 張小幅放量 +2.5%，量價同步走揚。台股大盤今日強攻創收盤新高（42,267 點），外資史上第 4 大單日買超 761 億，市值 ETF 直接受惠大盤多頭氣勢。</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">技術指標</div>
+        <div class="analysis-text">均線系統日/週/月三框架全面「強力買進」，股價站穩所有關鍵均線之上。振盪指標中性（非超買），代表仍有技術上的上行空間，為市值 ETF 最佳波段介入格局。</div>
+      </div>
+    </div>
+    <div class="action-box fire">
+      <div class="al">⚡ 操作建議</div>
+      可在 NT$96.5～97.5 區間分批進場（2～3 批）<br>
+      🛡️ 停損：NT$93.0（跌破月線視為多頭轉弱）<br>
+      🎯 目標①：NT$100 整數關卡｜目標②：依前高調整
+    </div>
+  </div>
+
+  <!-- 2330 台積電 ⏳ -->
+  <div class="card signal-wait">
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="ticker">2330</div>
+        <div class="name">台積電 TSMC</div>
+      </div>
+      <span class="signal-badge badge-wait">⏳ 持續觀望</span>
+    </div>
+    <div class="price-row">
+      <span class="price">NT$2,255</span>
+      <span class="change up">▲ +25 (+1.12%)</span>
+      <span class="asset-tag">台股個股</span>
+    </div>
+    <div class="ohlc-row">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">2,245</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val" style="color:var(--green)">2,260</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">2,225</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">2,230</div></div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">成交量</div>
+        <div class="metric-value info">24,381 張</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">昨量</div>
+        <div class="metric-value neut">22,896 張</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">距 ATH</div>
+        <div class="metric-value neut">-3.8%</div>
+      </div>
+    </div>
+    <div class="vol-section">
+      <div class="vol-label">
+        <span>今日量 24,381 vs 昨量 22,896（+6.5%）</span>
+        <span style="color:var(--yellow)">量能偏低</span>
+      </div>
+      <div class="vol-bar-bg">
+        <div class="vol-bar-fill" style="width:40%;background:var(--yellow)"></div>
+      </div>
+    </div>
+    <div class="indicators">
+      <div class="ind-row">
+        <span class="ind-name">RSI(14)</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:73%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">72～75</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">均線排列</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:90%;background:var(--green)"></div></div>
+        <span class="ind-val" style="color:var(--green)">多頭</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">ATH 壓力</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:60%;background:var(--yellow)"></div></div>
+        <span class="ind-val" style="color:var(--yellow)">-3.8%</span>
+      </div>
+    </div>
+    <div class="ma-row">
+      <span class="ma-chip above">5MA ✓ ~2,228</span>
+      <span class="ma-chip above">20MA ✓ 上方</span>
+      <span class="ma-chip above">60MA ✓ 上方</span>
+      <span class="ma-chip above">200MA ✓ 上方</span>
+    </div>
+    <div class="divider"></div>
+    <div class="analysis">
+      <div class="analysis-section">
+        <div class="analysis-label">資產診斷</div>
+        <div class="analysis-text">今日收 NT$2,255（+1.12%），昨收 NT$2,230，距 5/7 ATH NT$2,345 仍約 -3.8%。成交量 24,381 張略高於昨日，但絕對量能偏低，技術上仍屬「窄幅震盪整理」階段，未見明確突破。</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">技術指標</div>
+        <div class="analysis-text">均線四線多頭排列完整，長線支撐穩固。RSI 72～75 處高檔偏超買，短線進一步上攻至前高需有效放量（建議達 40,000 張以上）配合，否則壓力解除困難。</div>
+      </div>
+    </div>
+    <div class="action-box wait">
+      <div class="al">🔍 觀察條件</div>
+      ①帶量（>40,000張）突破 NT$2,280 確認前高消化<br>
+      ②或 RSI 回落至 55～60 在 NT$2,200 附近承接<br>
+      🛡️ 停損：NT$2,180｜🎯 目標：NT$2,345 前高
+    </div>
+  </div>
+
+  <!-- 2317 鴻海 ⏳ -->
+  <div class="card signal-wait">
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="ticker">2317</div>
+        <div class="name">鴻海精密 Hon Hai</div>
+      </div>
+      <span class="signal-badge badge-wait">⏳ 持續觀望</span>
+    </div>
+    <div class="price-row">
+      <span class="price">NT$250</span>
+      <span class="change up">▲ +2.5 (+1.01%)</span>
+      <span class="asset-tag">台股個股</span>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">成交量</div>
+        <div class="metric-value neut">55,024 張</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">量/20日均量</div>
+        <div class="metric-value neut">約 66%</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">RSI(14)</div>
+        <div class="metric-value bear">71.5</div>
+      </div>
+    </div>
+    <div class="vol-section">
+      <div class="vol-label">
+        <span>成交量 55,024 vs 20日均量（約 83,000 張）</span>
+        <span style="color:var(--yellow)">66%</span>
+      </div>
+      <div class="vol-bar-bg">
+        <div class="vol-bar-fill" style="width:66%;background:var(--yellow)"></div>
+      </div>
+    </div>
+    <div class="indicators">
+      <div class="ind-row">
+        <span class="ind-name">RSI(14)</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:71%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">71.5</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">BB 位置</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:68%;background:var(--yellow)"></div></div>
+        <span class="ind-val" style="color:var(--yellow)">中上段</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">均線排列</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:88%;background:var(--green)"></div></div>
+        <span class="ind-val" style="color:var(--green)">多頭</span>
+      </div>
+    </div>
+    <div class="ma-row">
+      <span class="ma-chip above">5MA ✓ ~224</span>
+      <span class="ma-chip above">20MA ✓ ~228</span>
+      <span class="ma-chip above">60MA ✓ ~230</span>
+      <span class="ma-chip above">240MA ✓ ~190</span>
+    </div>
+    <div class="divider"></div>
+    <div class="analysis">
+      <div class="analysis-section">
+        <div class="analysis-label">資產診斷</div>
+        <div class="analysis-text">收 NT$250（+1.01%），成交量 55,024 張較 20 日均量（約 83,000 張）仍縮減約 34%。在大盤強漲 +2.18% 的格局下，鴻海量能未能相應放大，顯示主力資金佈局力道有所保留。</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">技術指標</div>
+        <div class="analysis-text">RSI 71.5 已觸超買邊緣，且 HNHPF 美股同業超買狀態延續逾 22 日。布林通道股價處中軌至上軌之間，KD 高檔鈍化，技術上具回測壓力。</div>
+      </div>
+    </div>
+    <div class="action-box wait">
+      <div class="al">🔍 觀察條件</div>
+      ①量>70,000張突破NT$255前高區<br>
+      ②或回落至NT$235～240縮量底部確認再進場<br>
+      🛡️ 停損：NT$228（跌破 20MA）
+    </div>
+  </div>
+
+  <!-- NVDA ⏳ -->
+  <div class="card signal-wait">
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="ticker">NVDA</div>
+        <div class="name">NVIDIA Corporation</div>
+      </div>
+      <span class="signal-badge badge-wait">⏳ 持續觀望</span>
+    </div>
+    <div class="price-row">
+      <span class="price">$219.51</span>
+      <span class="change down">▼ -3.96 (-1.77%)</span>
+      <span class="asset-tag">美股個股</span>
+    </div>
+    <div class="ohlc-row">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">222.20</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val" style="color:var(--green)">227.40</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val" style="color:var(--red)">217.93</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">223.47</div></div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">成交量</div>
+        <div class="metric-value bear">201M 股</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">量 vs 均量</div>
+        <div class="metric-value bear">+18.7% 放量</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">MACD</div>
+        <div class="metric-value bear">空頭交叉</div>
+      </div>
+    </div>
+    <div class="indicators">
+      <div class="ind-row">
+        <span class="ind-name">RSI(14)</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:51%;background:var(--yellow)"></div></div>
+        <span class="ind-val" style="color:var(--yellow)">~51</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">MACD</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:28%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">空叉</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">Stoch</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:51%;background:var(--yellow)"></div></div>
+        <span class="ind-val" style="color:var(--yellow)">51.4</span>
+      </div>
+    </div>
+    <div class="ma-row">
+      <span class="ma-chip below">5MA ✗ $224.87 壓制</span>
+      <span class="ma-chip above">20MA ✓ ~$203</span>
+      <span class="ma-chip above">50MA ✓ ~$201</span>
+      <span class="ma-chip above">200MA ✓ ~$182</span>
+    </div>
+    <div class="divider"></div>
+    <div class="analysis">
+      <div class="analysis-section">
+        <div class="analysis-label">資產診斷</div>
+        <div class="analysis-text">Q1 FY2027 財報大幅超預期（EPS $1.87 vs $1.78E），卻引發「利多出盡」賣壓。成交量 201M 放大 +18.7%，股價卻跌 1.77%，呈現「放量長黑」的短線分配訊號，自 ATH $236.54 已回落約 7.2%。</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">技術指標</div>
+        <div class="analysis-text">MACD 下穿訊號線形成空頭交叉，股價跌破 5MA 使其轉壓力。RSI ~51 中性，尚未至超賣承接區，中長期 MA 架構仍完整，長線牛市未破。</div>
+      </div>
+    </div>
+    <div class="action-box wait">
+      <div class="al">🔍 觀察條件</div>
+      等待 $207～$212 量能支撐區縮量止跌<br>
+      + KD 低檔黃金交叉後分批建倉<br>
+      🛡️ 停損：$205｜🎯 前高：$236.54
+    </div>
+  </div>
+
+  <!-- AAPL ⏳ -->
+  <div class="card signal-wait">
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="ticker">AAPL</div>
+        <div class="name">Apple Inc.</div>
+      </div>
+      <span class="signal-badge badge-wait">⏳ 持續觀望</span>
+    </div>
+    <div class="price-row">
+      <span class="price">$304.99</span>
+      <span class="change up">▲ +2.74 (+0.91%)</span>
+      <span class="new-high-tag">🏆 52週新高</span>
+      <span class="asset-tag">美股個股</span>
+    </div>
+    <div class="ohlc-row">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">301.05</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val" style="color:var(--green)">305.54 ★</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">300.40</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">302.25</div></div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">成交量</div>
+        <div class="metric-value info">42.8M 股</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">RSI(14)</div>
+        <div class="metric-value bear">64～76</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">52週高</div>
+        <div class="metric-value bull">$305.54 今觸</div>
+      </div>
+    </div>
+    <div class="indicators">
+      <div class="ind-row">
+        <span class="ind-name">RSI(14)</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:70%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">70+</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">BB 位置</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:82%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">突破上軌</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">Stoch %K</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:62%;background:var(--yellow)"></div></div>
+        <span class="ind-val" style="color:var(--yellow)">61.8</span>
+      </div>
+    </div>
+    <div class="ma-row">
+      <span class="ma-chip above">5MA ✓ $292.55</span>
+      <span class="ma-chip above">20MA ✓ ~$259</span>
+      <span class="ma-chip above">50MA ✓ ~$259</span>
+      <span class="ma-chip above">200MA ✓ ~$252</span>
+    </div>
+    <div class="divider"></div>
+    <div class="analysis">
+      <div class="analysis-section">
+        <div class="analysis-label">資產診斷</div>
+        <div class="analysis-text">今日盤中觸及 $305.54 創下 52 週新高，收盤 $304.99（+0.91%），量能 42.8M 接近 20 日均量水位。52 週新高突破是動能延伸的重要訊號，但收盤略低於高點顯示有部分獲利了結賣壓。</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">技術指標</div>
+        <div class="analysis-text">布林上軌（~$301.5）已被突破，RSI 逼近 70 超買區，指標上需留意短線鈍化風險。均線系統全面多頭（12/12 Buy），長線主軸完整。關鍵觀察：$300 能否由壓力轉為支撐。</div>
+      </div>
+    </div>
+    <div class="action-box wait">
+      <div class="al">🔍 觀察條件</div>
+      等待 $300～$302 縮量守穩（布林上軌回測確認）<br>
+      + RSI 降至 60～65 後右側進場<br>
+      🛡️ 停損：$295｜🎯 目標：$315～$320
+    </div>
+  </div>
+
+  <!-- GOOG ⏳ -->
+  <div class="card signal-wait">
+    <div class="card-header">
+      <div class="card-title-group">
+        <div class="ticker">GOOG</div>
+        <div class="name">Alphabet Inc. (Class C)</div>
+      </div>
+      <span class="signal-badge badge-wait">⏳ 持續觀望</span>
+    </div>
+    <div class="price-row">
+      <span class="price">$383.47</span>
+      <span class="change down">▼ -1.43 (-0.37%)</span>
+      <span class="asset-tag">美股個股</span>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">成交量</div>
+        <div class="metric-value bear">16.3M 股</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">量 vs 均量</div>
+        <div class="metric-value bear">約 45%</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">MACD</div>
+        <div class="metric-value bull">+8.80 正</div>
+      </div>
+    </div>
+    <div class="vol-section">
+      <div class="vol-label">
+        <span>GOOG C 量 16.3M vs 均量 17.07M</span>
+        <span style="color:var(--red)">45%（萎縮）</span>
+      </div>
+      <div class="vol-bar-bg">
+        <div class="vol-bar-fill" style="width:45%;background:var(--red)"></div>
+      </div>
+    </div>
+    <div class="indicators">
+      <div class="ind-row">
+        <span class="ind-name">RSI(14)</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:72%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">72+</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">MACD</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:75%;background:var(--green)"></div></div>
+        <span class="ind-val" style="color:var(--green)">+8.80</span>
+      </div>
+      <div class="ind-row">
+        <span class="ind-name">量能比</span>
+        <div class="ind-bar-bg"><div class="ind-bar-fill" style="width:45%;background:var(--red)"></div></div>
+        <span class="ind-val" style="color:var(--red)">45%</span>
+      </div>
+    </div>
+    <div class="ma-row">
+      <span class="ma-chip above">5MA ✓ $386.76</span>
+      <span class="ma-chip below">50MA ✗ $394.05 壓制</span>
+      <span class="ma-chip above">200MA ✓ $366.24</span>
+    </div>
+    <div class="divider"></div>
+    <div class="analysis">
+      <div class="analysis-section">
+        <div class="analysis-label">資產診斷</div>
+        <div class="analysis-text">收 $383.47（-0.37%），GOOG C 類成交量僅 16.3M，約為均量 45%，量能嚴重萎縮，且今日美股大環境相對強勢下 GOOG 反而小跌，顯示個股動能偏弱、資金無意追高。</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">技術指標</div>
+        <div class="analysis-text">50MA $394.05 是當前核心壓力，股價尚在其下方。MACD 正值 +8.80 為中期動能仍存的訊號，RSI 72 偏超買，Stochastic 73.98 接近警戒線。</div>
+      </div>
+    </div>
+    <div class="action-box wait">
+      <div class="al">🔍 觀察條件</div>
+      等待帶量站穩 50MA $394 上方（突破壓制）<br>
+      或回測 $380～387 縮量止跌後佈局<br>
+      🛡️ 停損：$378｜🎯 目標：$402～$408
+    </div>
+  </div>
+
+</div><!-- /cards-grid -->
+
+<!-- FOOTER -->
+<div class="footer">
+  ✅ 本報告數據直接由 Yahoo Finance 台灣版（tw.stock.yahoo.com）即時抓取，資料時間：2026/05/22 台股 14:30 收盤、美股前日收盤價。<br>
+  ⚠️ 技術分析僅供參考，不構成任何投資建議。投資決策請自行評估風險承受能力。<br><br>
+  © 2026 每日市場監測系統 | 數據來源：Yahoo Finance 台灣版
+</div>
+
+</body>
+</html>
