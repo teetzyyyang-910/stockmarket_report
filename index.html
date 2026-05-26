@@ -307,8 +307,8 @@
   <div class="stats-inner">
     <div class="stat-item">
       <div class="stat-label">監測商品</div>
-      <div class="stat-value">6</div>
-      <div class="stat-sub">台股 + 美股 + ETF</div>
+      <div class="stat-value">11</div>
+      <div class="stat-sub">台股 6 ／ 美股 5</div>
     </div>
     <div class="stat-item">
       <div class="stat-label">報告總數</div>
@@ -323,7 +323,7 @@
     <div class="stat-item">
       <div class="stat-label">排程狀態</div>
       <div class="stat-value" style="color:var(--green);font-size:15px;margin-top:6px">● 運行中</div>
-      <div class="stat-sub">週一至週五 15:00</div>
+      <div class="stat-sub">週一至週五 16:00</div>
     </div>
   </div>
 </div>
@@ -359,12 +359,19 @@
     </div>
   </div>
   <div class="watchlist">
-    <div class="watchlist-title">📋 Current Watchlist</div>
-    <div class="watchlist-grid">
+    <div class="watchlist-title">📋 監測清單（共 11 檔）</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">🇹🇼 台股 6 檔 ／ 🇺🇸 美股 5 檔</div>
+    <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:6px;letter-spacing:.5px;">🇹🇼 台股</div>
+    <div class="watchlist-grid" style="margin-bottom:14px;">
       <div class="wl-item">
         <div class="wl-ticker">0050</div>
         <div class="wl-name">元大台灣50</div>
         <span class="wl-badge etf">市值ETF</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">0056</div>
+        <div class="wl-name">元大高股息</div>
+        <span class="wl-badge" style="background:#2a1a3e;color:#bc8cff;">高股息ETF</span>
       </div>
       <div class="wl-item">
         <div class="wl-ticker">2330</div>
@@ -376,6 +383,19 @@
         <div class="wl-name">鴻海</div>
         <span class="wl-badge tw">台股個股</span>
       </div>
+      <div class="wl-item">
+        <div class="wl-ticker">3189</div>
+        <div class="wl-name">景碩</div>
+        <span class="wl-badge tw">台股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">2449</div>
+        <div class="wl-name">京元電子</div>
+        <span class="wl-badge tw">台股個股</span>
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:6px;letter-spacing:.5px;">🇺🇸 美股</div>
+    <div class="watchlist-grid">
       <div class="wl-item">
         <div class="wl-ticker">NVDA</div>
         <div class="wl-name">NVIDIA</div>
@@ -389,6 +409,16 @@
       <div class="wl-item">
         <div class="wl-ticker">GOOG</div>
         <div class="wl-name">Alphabet</div>
+        <span class="wl-badge us">美股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">MSFT</div>
+        <div class="wl-name">Microsoft</div>
+        <span class="wl-badge us">美股個股</span>
+      </div>
+      <div class="wl-item">
+        <div class="wl-ticker">TSLA</div>
+        <div class="wl-name">Tesla</div>
         <span class="wl-badge us">美股個股</span>
       </div>
     </div>
@@ -409,7 +439,7 @@
 ══════════════════════════════════════ -->
 <footer>
   <div>每日市場監測系統 · 由 <strong>Claude AI + Cowork</strong> 自動生成</div>
-  <div>資料來源：<a href="https://tw.stock.yahoo.com" target="_blank">Yahoo Finance 台灣版</a> · 每個交易日 15:00 自動更新</div>
+  <div>資料來源：<a href="https://tw.stock.yahoo.com" target="_blank">Yahoo Finance 台灣版</a> · 每個交易日 16:00 自動更新</div>
   <div style="margin-top:6px;font-size:10px">⚠️ 本系統報告僅供技術面參考，不構成任何投資建議。</div>
 </footer>
 
