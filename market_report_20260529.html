@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日市場監測報告 2026-05-29</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; line-height: 1.6; }
+  .header { background: linear-gradient(135deg, #161b22 0%, #0d1117 100%); border-bottom: 1px solid #30363d; padding: 20px 24px; }
+  .header h1 { font-size: 22px; color: #f0f6fc; font-weight: 700; }
+  .header .subtitle { color: #8b949e; font-size: 13px; margin-top: 4px; }
+  .data-notice { color: #d29922; font-size: 12px; margin-top: 4px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
+  .section-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 8px; margin: 24px 0 16px; font-size: 18px; font-weight: 700; }
+  .tw-header { background: linear-gradient(90deg, #1a2332 0%, #161b22 100%); border-left: 4px solid #1f6feb; color: #58a6ff; }
+  .us-header { background: linear-gradient(90deg, #1f1a2e 0%, #161b22 100%); border-left: 4px solid #bc8cff; color: #bc8cff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; transition: border-color 0.2s; }
+  .card:hover { border-color: #58a6ff; }
+  .card-header { padding: 14px 16px 10px; border-bottom: 1px solid #21262d; }
+  .card-title { display: flex; justify-content: space-between; align-items: flex-start; }
+  .stock-name { font-size: 15px; font-weight: 700; color: #f0f6fc; }
+  .stock-code { font-size: 12px; color: #8b949e; }
+  .price-block { text-align: right; }
+  .price { font-size: 22px; font-weight: 700; color: #f0f6fc; }
+  .change-pos { color: #3fb950; font-size: 14px; font-weight: 600; }
+  .change-neg { color: #f85149; font-size: 14px; font-weight: 600; }
+  .signal { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .signal-buy { background: rgba(63,185,80,0.15); border: 1px solid #3fb950; color: #3fb950; }
+  .signal-wait { background: rgba(210,153,34,0.15); border: 1px solid #d29922; color: #d29922; }
+  .signal-sell { background: rgba(248,81,73,0.15); border: 1px solid #f85149; color: #f85149; }
+  .card-body { padding: 12px 16px; }
+  .section-label { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; margin: 10px 0 6px; border-bottom: 1px solid #21262d; padding-bottom: 4px; }
+  .ohlc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px; }
+  .ohlc-item { background: #0d1117; border-radius: 6px; padding: 6px 8px; text-align: center; }
+  .ohlc-label { font-size: 10px; color: #8b949e; }
+  .ohlc-val { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .vol-bar { background: #21262d; border-radius: 4px; height: 8px; margin: 4px 0; overflow: hidden; }
+  .vol-fill { height: 100%; border-radius: 4px; }
+  .vol-info { font-size: 12px; color: #8b949e; }
+  .indicator-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+  .tag { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .tag-green { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .tag-red { background: rgba(248,81,73,0.15); color: #f85149; }
+  .tag-yellow { background: rgba(210,153,34,0.15); color: #d29922; }
+  .tag-blue { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .tag-purple { background: rgba(188,140,255,0.15); color: #bc8cff; }
+  .legal-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0; }
+  .legal-table th { background: #0d1117; color: #8b949e; padding: 5px 8px; text-align: left; font-weight: 600; }
+  .legal-table td { padding: 5px 8px; border-bottom: 1px solid #21262d; }
+  .legal-table tr:last-child td { border-bottom: none; }
+  .pos { color: #3fb950; font-weight: 600; }
+  .neg { color: #f85149; font-weight: 600; }
+  .valuation-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 6px 0; }
+  .val-item { background: #0d1117; border-radius: 6px; padding: 6px 8px; text-align: center; }
+  .val-label { font-size: 10px; color: #8b949e; }
+  .val-val { font-size: 13px; font-weight: 600; color: #c9d1d9; }
+  .analysis-text { background: #0d1117; border-radius: 6px; padding: 10px 12px; font-size: 12px; line-height: 1.7; color: #c9d1d9; margin: 6px 0; }
+  .analysis-text b { color: #58a6ff; }
+  .news-item { background: #0d1117; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; border-left: 3px solid #30363d; }
+  .news-title { font-size: 12px; color: #c9d1d9; font-weight: 600; }
+  .news-meta { font-size: 11px; color: #8b949e; margin-top: 2px; }
+  .news-pos { border-left-color: #3fb950; }
+  .news-neg { border-left-color: #f85149; }
+  .news-neu { border-left-color: #8b949e; }
+  .action-box { background: #1c2128; border: 1px solid #30363d; border-radius: 8px; padding: 10px 12px; margin: 8px 0 0; }
+  .action-row { display: flex; justify-content: space-between; font-size: 12px; color: #8b949e; }
+  .action-row span { color: #c9d1d9; font-weight: 600; }
+  .target-bar-wrap { margin: 6px 0; }
+  .target-bar-bg { background: #21262d; border-radius: 4px; height: 10px; position: relative; }
+  .target-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #f85149, #d29922, #3fb950); }
+  .target-bar-marker { position: absolute; top: -3px; width: 3px; height: 16px; background: #f0f6fc; border-radius: 2px; }
+  .analyst-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 12px; }
+  .analyst-bar { flex: 1; background: #21262d; border-radius: 3px; height: 8px; overflow: hidden; }
+  .analyst-bar-buy { background: #3fb950; height: 100%; }
+  .analyst-bar-hold { background: #d29922; height: 100%; }
+  .analyst-bar-sell { background: #f85149; height: 100%; }
+  .footer { background: #161b22; border-top: 1px solid #30363d; padding: 16px 24px; text-align: center; color: #8b949e; font-size: 12px; margin-top: 32px; }
+  .footer a { color: #58a6ff; text-decoration: none; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .ohlc-grid { grid-template-columns: repeat(2,1fr); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 每日市場監測報告</h1>
+  <div class="subtitle">2026年05月29日（週五）｜ 台股＋美股 12檔監測</div>
+  <div class="data-notice">⚠️ 三大法人籌碼數據基準：5/28（前一交易日，TWSE T86）｜本益比/殖利率：TWSE BWIBBU_d 5/28官方數據</div>
+</div>
+
+<div class="container">
+
+<!-- ===== 台股區 ===== -->
+<div class="section-header tw-header">🇹🇼 台股監測（6 檔）</div>
+<div class="grid">
+
+<!-- 2330 台積電 -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ 2330 持續觀望</span><br>
+        <span class="stock-name">台積電</span>
+        <span class="stock-code"> ｜ 2330 ｜ 台股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">2,355</div>
+        <div class="change-pos">▲ +60.00 (+2.61%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（TWSE STOCK_DAY 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">2,340</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">2,375</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">2,330</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">2,355</div></div>
+    </div>
+    <div class="vol-info">成交量：89,562 張 ｜ 昨量：42,313 張 ｜ <span class="pos">量增 +111%（倍量）</span></div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-green">帶量突破</span>
+      <span class="tag tag-green">5MA 上穿趨勢</span>
+      <span class="tag tag-yellow">外資籌碼待確認</span>
+      <span class="tag tag-blue">布林帶中上軌</span>
+    </div>
+
+    <div class="section-label">籌碼動向（證交所 5/28）</div>
+    <table class="legal-table">
+      <tr><th>法人</th><th>買賣超（千張）</th><th>訊號</th></tr>
+      <tr><td>外資</td><td class="neg">-7,079 張</td><td class="neg">偏空</td></tr>
+      <tr><td>投信</td><td class="pos">+465 張</td><td class="pos">偏多</td></tr>
+      <tr><td>自營商</td><td class="pos">+466 張</td><td class="pos">偏多</td></tr>
+      <tr><td><b>三大合計</b></td><td class="neg"><b>-6,147 張</b></td><td class="neg"><b>偏空</b></td></tr>
+    </table>
+
+    <div class="section-label">估值（TWSE BWIBBU_d 5/28）</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">本益比</div><div class="val-val">30.86x</div></div>
+      <div class="val-item"><div class="val-label">殖利率</div><div class="val-val">0.96%</div></div>
+      <div class="val-item"><div class="val-label">股價淨值比</div><div class="val-val">10.10x</div></div>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日倍量大漲2.61%，K線收帶量長紅，技術面轉強。然而，外資昨日仍賣超6,147張，多空換手明顯，需觀察外資是否連續回補。<br>
+      <b>【技術指標】</b>：突破近期整理區，5MA上穿，RSI偏強但需防技術回調。布林帶開口向上，上軌目標2,400。<br>
+      <b>【風控建議】</b>：觀察外資是否轉買。持有者守2,295（月線）；突破2,375放量可加碼，目標2,500+。
+    </div>
+
+    <div class="section-label">產業消息</div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Q1 EPS 22.08元創新高，毛利率66.2%</div>
+      <div class="news-meta">工商時報 ｜ 2026-04-16</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 高盛喊目標價2,330元，全年EPS預估上修至95元</div>
+      <div class="news-meta">口袋學堂 ｜ 2026-05</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場區 <span>2,295–2,330</span></div>
+      <div class="action-row">停損 <span>跌破 2,250（季線）</span></div>
+      <div class="action-row">目標 <span>2,500+</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2317 鴻海 -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-buy">🔥 2317 進場訊號觸發</span><br>
+        <span class="stock-name">鴻海</span>
+        <span class="stock-code"> ｜ 2317 ｜ 台股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">289</div>
+        <div class="change-pos">▲ +26.00 (+9.9%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（TWSE STOCK_DAY 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">269</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">289</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">268</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">289</div></div>
+    </div>
+    <div class="vol-info">成交量：289,078 張 ｜ 昨量：73,792 張 ｜ <span class="pos">量暴增 +292%（4倍量）</span></div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-green">漲停板</span>
+      <span class="tag tag-green">4倍量突破</span>
+      <span class="tag tag-green">KD金叉</span>
+      <span class="tag tag-green">突破布林上軌</span>
+    </div>
+
+    <div class="section-label">籌碼動向（證交所 5/28）</div>
+    <table class="legal-table">
+      <tr><th>法人</th><th>買賣超（千張）</th><th>訊號</th></tr>
+      <tr><td>外資</td><td class="pos">+12,866 張</td><td class="pos">強多</td></tr>
+      <tr><td>投信</td><td class="pos">+130 張</td><td class="pos">偏多</td></tr>
+      <tr><td>自營商</td><td class="neg">-173 張</td><td class="neg">微空</td></tr>
+      <tr><td><b>三大合計</b></td><td class="pos"><b>+12,824 張</b></td><td class="pos"><b>強多</b></td></tr>
+    </table>
+
+    <div class="section-label">估值（TWSE BWIBBU_d 5/28）</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">本益比</div><div class="val-val">18.68x</div></div>
+      <div class="val-item"><div class="val-label">殖利率</div><div class="val-val">2.74%</div></div>
+      <div class="val-item"><div class="val-label">股價淨值比</div><div class="val-val">2.07x</div></div>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日漲停+9.9%，量爆增至289K張（前日73K，4倍量），完美量價俱揚。外資昨日大買12,824張，法說後市場重新定價AI伺服器題材。<br>
+      <b>【技術指標】</b>：突破前高，KD黃金交叉，布林帶開口向上爆發，RSI進入強勢超買區。5MA大幅上穿20MA。<br>
+      <b>【風控建議】</b>：漲停板隔日可能高開震盪。追高注意控制倉位，進場後守265（前段壓力轉支撐），停損設260。目標310+。
+    </div>
+
+    <div class="section-label">產業消息</div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Q1 EPS 3.56元創同期新高，AI機櫃出貨全年倍增</div>
+      <div class="news-meta">豐雲學堂 ｜ 2026-05-22 法說會</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 外資連10天買超，累計30萬張，股利創上市新高7.2元</div>
+      <div class="news-meta">旺得富 ｜ 2026-05-14</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">進場區間 <span>285–289（漲停價附近）</span></div>
+      <div class="action-row">停損 <span>跌破 260</span></div>
+      <div class="action-row">目標 <span>310–330</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3189 景碩 -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ 3189 持續觀望</span><br>
+        <span class="stock-name">景碩</span>
+        <span class="stock-code"> ｜ 3189 ｜ 台股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">729</div>
+        <div class="change-pos">▲ +48.00 (+7.04%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（TWSE STOCK_DAY 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">707</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">746</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">704</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">729</div></div>
+    </div>
+    <div class="vol-info">成交量：7,358 張 ｜ 昨量：8,187 張 ｜ <span class="tag-yellow">量縮 -10%</span></div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-yellow">量縮上漲</span>
+      <span class="tag tag-green">ABF載板題材</span>
+      <span class="tag tag-yellow">高檔震盪整理</span>
+      <span class="tag tag-red">PE 191.83 極高</span>
+    </div>
+
+    <div class="section-label">籌碼動向（證交所 5/28）</div>
+    <table class="legal-table">
+      <tr><th>法人</th><th>買賣超（千張）</th><th>訊號</th></tr>
+      <tr><td>外資</td><td class="neg">-70 張</td><td class="neg">微空</td></tr>
+      <tr><td>投信</td><td class="pos">+2 張</td><td>持平</td></tr>
+      <tr><td>自營商</td><td class="neg">-353 張</td><td class="neg">偏空</td></tr>
+      <tr><td><b>三大合計</b></td><td class="neg"><b>-421 張</b></td><td class="neg"><b>偏空</b></td></tr>
+    </table>
+
+    <div class="section-label">估值（TWSE BWIBBU_d 5/28）</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">本益比</div><div class="val-val">191.83x</div></div>
+      <div class="val-item"><div class="val-label">殖利率</div><div class="val-val">0.26%</div></div>
+      <div class="val-item"><div class="val-label">股價淨值比</div><div class="val-val">8.32x</div></div>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：漲幅7%但量縮，且法人合計賣超421張，量價背離。ABF載板題材市場高度關注，但PE達191倍，估值偏高，存在獲利了結壓力。<br>
+      <b>【技術指標】</b>：高點746收729，上引線明顯，顯示高檔有賣壓。KD在高檔鈍化，布林帶上軌附近。<br>
+      <b>【風控建議】</b>：等待量能回補突破746確認，或回測700支撐再評估。停損設680（月線）。
+    </div>
+
+    <div class="section-label">產業消息</div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 2026首季營收歷史新高，EPS預估7.5–8.8元</div>
+      <div class="news-meta">CMoney ｜ 2026-05</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 AI伺服器ABF載板需求爆發，4月營收創172個月新高</div>
+      <div class="news-meta">產業分析 ｜ 2026-05</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場 <span>突破 746 帶量確認</span></div>
+      <div class="action-row">停損 <span>跌破 680</span></div>
+      <div class="action-row">目標 <span>800+</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2449 京元電子 -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ 2449 持續觀望</span><br>
+        <span class="stock-name">京元電子</span>
+        <span class="stock-code"> ｜ 2449 ｜ 台股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">328.5</div>
+        <div class="change-pos">▲ +8.50 (+2.65%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（TWSE STOCK_DAY 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">329</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">329.5</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">311.5</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">328.5</div></div>
+    </div>
+    <div class="vol-info">成交量：68,719 張 ｜ 昨量：72,840 張 ｜ 量微縮 -6%</div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-yellow">開高走低再拉回</span>
+      <span class="tag tag-red">盤中最深跌至311.5</span>
+      <span class="tag tag-green">外資大買22,857K（5/28）</span>
+      <span class="tag tag-red">投信賣超5,046K</span>
+    </div>
+
+    <div class="section-label">籌碼動向（證交所 5/28）</div>
+    <table class="legal-table">
+      <tr><th>法人</th><th>買賣超（千張）</th><th>訊號</th></tr>
+      <tr><td>外資</td><td class="pos">+22,857 張</td><td class="pos">強多</td></tr>
+      <tr><td>投信</td><td class="neg">-5,046 張</td><td class="neg">偏空</td></tr>
+      <tr><td>自營商</td><td class="neg">-322 張</td><td class="neg">偏空</td></tr>
+      <tr><td><b>三大合計</b></td><td class="pos"><b>+17,489 張</b></td><td class="pos"><b>外資主導偏多</b></td></tr>
+    </table>
+
+    <div class="section-label">估值（TWSE BWIBBU_d 5/28）</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">本益比</div><div class="val-val">43.42x</div></div>
+      <div class="val-item"><div class="val-label">殖利率</div><div class="val-val">0.47%</div></div>
+      <div class="val-item"><div class="val-label">股價淨值比</div><div class="val-val">7.19x</div></div>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日最深跌至311.5（-5.3%），尾盤強力拉回至328.5，盤中劇烈震盪顯示多空對峙激烈。外資昨日大買22,857張，投信賣超5,046張，籌碼分歧。<br>
+      <b>【技術指標】</b>：下影線長，代表多方守住支撐，但波動性高。量略縮，動能需確認。<br>
+      <b>【風控建議】</b>：觀察是否守穩320。停損設308（盤中低點支撐），守穩後目標350+。
+    </div>
+
+    <div class="section-label">產業消息</div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Q1營收101.9億元歷史新高，全年目標500億，資本支出500億</div>
+      <div class="news-meta">理財周刊 ｜ 2026-05</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 AI測試佔營收35–40%，入選亞洲AI十強，NVIDIA GPU＆Google TPU測試訂單</div>
+      <div class="news-meta">CMoney ｜ 2026-05</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場 <span>守穩 320 後</span></div>
+      <div class="action-row">停損 <span>跌破 308</span></div>
+      <div class="action-row">目標 <span>350+</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 0050 元大台灣50 -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ 0050 持續觀望</span><br>
+        <span class="stock-name">元大台灣50</span>
+        <span class="stock-code"> ｜ 0050 ｜ 市值型 ETF</span>
+      </div>
+      <div class="price-block">
+        <div class="price">105.40</div>
+        <div class="change-pos">▲ +4.90 (+4.87%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（TWSE STOCK_DAY 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">103.20</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">105.40</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">102.70</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">105.40</div></div>
+    </div>
+    <div class="vol-info">成交量：102,356 張 ｜ 昨量：152,916 張 ｜ <span class="neg">量縮 -33%</span></div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-green">收盤創近期高點</span>
+      <span class="tag tag-yellow">法人大量賣超</span>
+      <span class="tag tag-blue">站上 20MA</span>
+    </div>
+
+    <div class="section-label">籌碼動向（證交所 5/28）</div>
+    <table class="legal-table">
+      <tr><th>法人</th><th>買賣超（千張）</th><th>訊號</th></tr>
+      <tr><td>外資</td><td class="neg">-39,725 張</td><td class="neg">大幅賣超</td></tr>
+      <tr><td>投信</td><td class="pos">+688 張</td><td class="pos">偏多</td></tr>
+      <tr><td>自營商</td><td class="neg">-21,961 張</td><td class="neg">大幅賣超</td></tr>
+      <tr><td><b>三大合計</b></td><td class="neg"><b>-60,998 張</b></td><td class="neg"><b>大幅賣超</b></td></tr>
+    </table>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日大漲4.87%，受台積電、鴻海帶動，但三大法人昨日合計大賣60,998張，外資＋自營商聯手出清，此為大盤重大警訊，法人大量減碼下的指數上漲持續性存疑。<br>
+      <b>【技術指標】</b>：上穿20MA，但量縮（102K vs 前日153K），量縮法人賣超下的上漲需謹慎。<br>
+      <b>【風控建議】</b>：不追高，等待量能配合且法人轉買。防守102.70（今日低點），跌破100整數關口出場。
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場 <span>法人轉買後，量能放大確認</span></div>
+      <div class="action-row">停損 <span>跌破 100</span></div>
+      <div class="action-row">目標 <span>110+</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 0056 元大高股息 -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-buy">🔥 0056 進場訊號觸發</span><br>
+        <span class="stock-name">元大高股息</span>
+        <span class="stock-code"> ｜ 0056 ｜ 高股息 ETF</span>
+      </div>
+      <div class="price-block">
+        <div class="price">50.20</div>
+        <div class="change-pos">▲ +1.37 (+2.81%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（TWSE STOCK_DAY 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">49.69</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">50.25</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">49.50</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">50.20</div></div>
+    </div>
+    <div class="vol-info">成交量：58,209 張 ｜ 昨量：62,679 張 ｜ 量持平（-7%）</div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-green">突破 50 整數關卡</span>
+      <span class="tag tag-green">法人小幅買超</span>
+      <span class="tag tag-green">收盤站上 50</span>
+    </div>
+
+    <div class="section-label">籌碼動向（證交所 5/28）</div>
+    <table class="legal-table">
+      <tr><th>法人</th><th>買賣超（千張）</th><th>訊號</th></tr>
+      <tr><td>外資</td><td class="pos">+2,848 張</td><td class="pos">偏多</td></tr>
+      <tr><td>投信</td><td>0 張</td><td>持平</td></tr>
+      <tr><td>自營商</td><td class="pos">+432 張</td><td class="pos">偏多</td></tr>
+      <tr><td><b>三大合計</b></td><td class="pos"><b>+3,281 張</b></td><td class="pos"><b>偏多</b></td></tr>
+    </table>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：突破50元整數心理關卡，法人合計小買3,281張，量能持平，為高股息ETF右側進場訊號。在大盤強勢帶動下，0056同步上漲。<br>
+      <b>【技術指標】</b>：突破50元下降趨勢線阻力，收盤站穩50以上，KD低檔翻揚，布林帶向上擴張。<br>
+      <b>【風控建議】</b>：現波段進場可行，守49.5（今日支撐），目標52–53元附近。每年配息穩定，適合波段持有。
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">進場區間 <span>50.00–50.25</span></div>
+      <div class="action-row">停損 <span>跌破 49.50</span></div>
+      <div class="action-row">目標 <span>52–53</span></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end tw grid -->
+
+<!-- ===== 美股區 ===== -->
+<div class="section-header us-header">🇺🇸 美股監測（6 檔）</div>
+<div class="grid">
+
+<!-- NVDA -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ NVDA 持續觀望</span><br>
+        <span class="stock-name">NVIDIA</span>
+        <span class="stock-code"> ｜ NVDA ｜ 美股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">$214.25</div>
+        <div class="change-pos">▲ +$1.65 (+0.78%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（Yahoo Finance 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">$211.27</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">$215.52</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">$211.22</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">$212.60</div></div>
+    </div>
+    <div class="vol-info">成交量：141.56M ｜ 52週高：$236.54 ｜ 52週低：$132.92</div>
+
+    <div class="section-label">估值＆評級</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">PE (TTM)</div><div class="val-val">32.81x</div></div>
+      <div class="val-item"><div class="val-label">EPS (TTM)</div><div class="val-val">$6.53</div></div>
+      <div class="val-item"><div class="val-label">市值</div><div class="val-val">$5.19T</div></div>
+    </div>
+
+    <div class="section-label">分析師評級＆目標價</div>
+    <div class="analyst-row">
+      <span style="color:#3fb950;min-width:30px">買入</span>
+      <div class="analyst-bar"><div class="analyst-bar-buy" style="width:90%"></div></div>
+      <span class="pos">37 Buy</span>
+    </div>
+    <div style="font-size:12px;color:#8b949e;margin:4px 0;">分析師共識目標：$425（Tigress，5/27）｜ Baird 最高目標：$500（5/21）</div>
+    <div class="target-bar-wrap">
+      <div style="font-size:11px;color:#8b949e;display:flex;justify-content:space-between;"><span>現價 $214</span><span>平均目標 $425</span><span>最高 $500</span></div>
+      <div class="target-bar-bg"><div class="target-bar-fill" style="width:43%"></div><div class="target-bar-marker" style="left:43%"></div></div>
+    </div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-yellow">低於52週高點10%</span>
+      <span class="tag tag-green">趨勢向上</span>
+      <span class="tag tag-yellow">RSI 中性區間</span>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日小漲0.78%，距52週高236.54仍有約10%空間，漲幅溫和。AI GPU基礎設施龍頭，需求確定性高，分析師一致看多。<br>
+      <b>【技術指標】</b>：尚未突破近期高點，處於高位整理。布林帶收斂，等待突破方向確認。<br>
+      <b>【風控建議】</b>：突破$220可加倉，防守$200（心理整數）。目標$250+（新高挑戰）。
+    </div>
+
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Baird 目標$500，Blackwell/Rubin 備貨超預期</div>
+      <div class="news-meta">Benzinga ｜ 2026-05-21</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Tigress 目標$425，GPU AI基礎設施需求持續擴張</div>
+      <div class="news-meta">MarketBeat ｜ 2026-05-27</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場 <span>突破 $220</span></div>
+      <div class="action-row">停損 <span>跌破 $200</span></div>
+      <div class="action-row">目標 <span>$250–$280</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- AAPL -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ AAPL 持續觀望</span><br>
+        <span class="stock-name">Apple</span>
+        <span class="stock-code"> ｜ AAPL ｜ 美股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">$312.51</div>
+        <div class="change-pos">▲ +$1.66 (+0.53%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（Yahoo Finance 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">$312.51</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">漲跌</div><div class="ohlc-val">+$1.66</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">漲跌幅</div><div class="ohlc-val">+0.53%</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">成交量</div><div class="ohlc-val">44.63M</div></div>
+    </div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-yellow">漲幅溫和</span>
+      <span class="tag tag-green">Apple Intelligence AI換機潮</span>
+      <span class="tag tag-blue">穩健趨勢</span>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日平穩小漲0.53%，收$312.51。Apple Intelligence功能持續推出，帶動換機潮題材，但漲幅有限，動能不強。<br>
+      <b>【技術指標】</b>：處於整理態勢，RSI中性，5MA與20MA走勢平緩向上。<br>
+      <b>【風控建議】</b>：等待放量突破$320或回測$300支撐，再決定加減碼。
+    </div>
+
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Apple Intelligence 全球推出，換機潮帶動iPhone銷售增長</div>
+      <div class="news-meta">各大媒體 ｜ 2026-05</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場 <span>突破 $320</span></div>
+      <div class="action-row">停損 <span>跌破 $295</span></div>
+      <div class="action-row">目標 <span>$340+</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- GOOG -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-wait">⏳ GOOG 持續觀望</span><br>
+        <span class="stock-name">Alphabet</span>
+        <span class="stock-code"> ｜ GOOG ｜ 美股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">$386.12</div>
+        <div class="change-pos">▲ +$1.29 (+0.34%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（Yahoo Finance 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">收盤</div><div class="ohlc-val">$386.12</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">漲跌</div><div class="ohlc-val">+$1.29</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">漲跌幅</div><div class="ohlc-val">+0.34%</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">成交量</div><div class="ohlc-val">17.83M</div></div>
+    </div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-yellow">漲幅微小</span>
+      <span class="tag tag-green">AI搜尋 + GCP成長</span>
+      <span class="tag tag-blue">整理蓄勢</span>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日小漲0.34%，表現平穩。Gemini AI整合搜尋引擎，Google Cloud平台（GCP）持續成長，是中長期基本面確定性高的標的。<br>
+      <b>【技術指標】</b>：量能清淡，整理態勢。等待催化劑（法說、Google I/O 新產品）放量突破。<br>
+      <b>【風控建議】</b>：守$370（月線支撐），突破$400放量可加碼，目標$420+。
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">觀察進場 <span>突破 $400</span></div>
+      <div class="action-row">停損 <span>跌破 $370</span></div>
+      <div class="action-row">目標 <span>$420+</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MSFT -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-buy">🔥 MSFT 進場訊號觸發</span><br>
+        <span class="stock-name">Microsoft</span>
+        <span class="stock-code"> ｜ MSFT ｜ 美股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">$426.99</div>
+        <div class="change-pos">▲ +$14.32 (+3.47%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（Yahoo Finance 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">$412.98</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">$429.49</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">$412.67</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">$412.67</div></div>
+    </div>
+    <div class="vol-info">成交量：46.78M ｜ 52週高：$555.45 ｜ 52週低：$356.28</div>
+
+    <div class="section-label">估值＆評級</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">PE (TTM)</div><div class="val-val">25.45x</div></div>
+      <div class="val-item"><div class="val-label">EPS (TTM)</div><div class="val-val">$16.78</div></div>
+      <div class="val-item"><div class="val-val" style="font-size:11px;padding-top:4px;">共識目標 $569.73<br><span style="color:#3fb950">38位分析師</span></div></div>
+    </div>
+
+    <div class="section-label">分析師目標價區間</div>
+    <div style="font-size:12px;color:#8b949e;margin:4px 0;">現價 $427 vs 共識目標 $569.73 | Wedbush 目標 $575（5/13）</div>
+    <div class="target-bar-wrap">
+      <div style="font-size:11px;color:#8b949e;display:flex;justify-content:space-between;"><span>$356（52w低）</span><span>現價 $427</span><span>目標 $575</span></div>
+      <div class="target-bar-bg"><div class="target-bar-fill" style="width:100%"></div><div class="target-bar-marker" style="left:33%"></div></div>
+    </div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-green">今日強漲3.47%</span>
+      <span class="tag tag-green">Azure AI 40%成長</span>
+      <span class="tag tag-green">AI年收入$37B（+123%）</span>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日強漲3.47%，伴隨量能放大。Azure AI 40%成長、Copilot 2000萬付費席位（年增250%）、AI年收入$37B的強勁基本面驅動。Q1整體營收$77.7B，超市場預期。<br>
+      <b>【技術指標】</b>：突破整理區，5MA上穿20MA，動能轉強，布林帶開口向上，RSI上行。距52週高點$555仍有30%空間。<br>
+      <b>【風控建議】</b>：進場守$410（今日低點支撐），分析師共識目標$569，潛在漲幅33%+。
+    </div>
+
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Azure成長40%，AI年收$37B（+123% YoY），Copilot席位 2000萬</div>
+      <div class="news-meta">heygotrade / Futurum ｜ 2026-05 Q1法說</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Wedbush 目標$575，AI資本支出$190B，強者恆強</div>
+      <div class="news-meta">Benzinga ｜ 2026-05-13</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">進場區間 <span>$420–$430</span></div>
+      <div class="action-row">停損 <span>跌破 $410</span></div>
+      <div class="action-row">目標 <span>$500–$570</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NOK -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-sell">🚨 NOK 建議出場/減碼</span><br>
+        <span class="stock-name">Nokia</span>
+        <span class="stock-code"> ｜ NOK ｜ 美股個股</span>
+      </div>
+      <div class="price-block">
+        <div class="price">$15.28</div>
+        <div class="change-neg">▼ -$0.40 (-2.55%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（Yahoo Finance 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">$15.82</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val">$15.82</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">$15.08</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">$15.68</div></div>
+    </div>
+    <div class="vol-info">成交量：116.17M（爆量）｜ 52週高：$16.63 ｜ 52週低：$4.00</div>
+
+    <div class="section-label">估值</div>
+    <div class="valuation-row">
+      <div class="val-item"><div class="val-label">PE (TTM)</div><div class="val-val">95.50x</div></div>
+      <div class="val-item"><div class="val-label">EPS (TTM)</div><div class="val-val">$0.16</div></div>
+      <div class="val-item"><div class="val-label">市值</div><div class="val-val">$85.3B</div></div>
+    </div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-red">從52週高16.63跌落</span>
+      <span class="tag tag-red">開高走低長黑</span>
+      <span class="tag tag-red">爆量（116M）出貨</span>
+      <span class="tag tag-red">PE 95倍估值過高</span>
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日開盤15.82即是日高，爆量116M（異常高量）賣出，收15.28跌2.55%，形成帶上影線的長黑K。從近期高點16.63已回落8%，技術面破位訊號明顯。<br>
+      <b>【技術指標】</b>：爆量長黑，KD高檔死叉，破5MA支撐，下一支撐約14.50–15.00。PE 95.5倍在EPS僅0.16美元的情況下估值泡沫化。<br>
+      <b>【風控建議】</b>：建議減碼。已持有者守15.00，跌破嚴格出場。潛在回調目標13.0–14.0（前期整理平台）。
+    </div>
+
+    <div class="section-label">產業消息</div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 AI驅動5G訂單：2026訂單積壓220億歐元，AI&Cloud新增10億（Q1）</div>
+      <div class="news-meta">SEC 6-K / StocksToTrade ｜ 2026-04</div>
+    </div>
+    <div class="news-item news-neg">
+      <div class="news-title">🔴 今日爆量下跌，從52週高回落，獲利了結壓力沉重</div>
+      <div class="news-meta">技術分析 ｜ 2026-05-29</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">建議減碼 <span>目前即出場</span></div>
+      <div class="action-row">停損 <span>跌破 $15.00</span></div>
+      <div class="action-row">回測支撐 <span>$13.0–14.0</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DRAM -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">
+      <div>
+        <span class="signal signal-buy">🔥 DRAM 進場訊號觸發</span><br>
+        <span class="stock-name">Roundhill Memory ETF</span>
+        <span class="stock-code"> ｜ DRAM ｜ 記憶體ETF</span>
+      </div>
+      <div class="price-block">
+        <div class="price">$62.57</div>
+        <div class="change-pos">▲ +$1.84 (+3.03%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">今日行情（Yahoo Finance 5/29）</div>
+    <div class="ohlc-grid">
+      <div class="ohlc-item"><div class="ohlc-label">開盤</div><div class="ohlc-val">$61.03</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最高</div><div class="ohlc-val" style="color:#3fb950">$63.64★</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">最低</div><div class="ohlc-val">$59.91</div></div>
+      <div class="ohlc-item"><div class="ohlc-label">昨收</div><div class="ohlc-val">$60.73</div></div>
+    </div>
+    <div class="vol-info">成交量：31.49M ｜ <span class="pos">52週高：$63.64（今日新高！）</span>｜ 52週低：$26.14</div>
+
+    <div class="section-label">主要持倉</div>
+    <div class="indicator-row">
+      <span class="tag tag-purple">SK Hynix ~25%</span>
+      <span class="tag tag-blue">Samsung ~25%</span>
+      <span class="tag tag-green">Micron ~25%</span>
+    </div>
+
+    <div class="section-label">技術指標</div>
+    <div class="indicator-row">
+      <span class="tag tag-green">創52週新高</span>
+      <span class="tag tag-green">HBM缺貨至2028</span>
+      <span class="tag tag-green">DRAM/NAND報價飆升70-80%</span>
+      <span class="tag tag-green">SK Hynix Q1利潤率72%</span>
+    </div>
+
+    <div class="section-label">HBM需求指標</div>
+    <div class="analysis-text" style="font-size:11px;">
+      SK Hynix Q1 2026：營收52.58兆韓元（+198% YoY），營業利益率72%<br>
+      Goldman Sachs：2026年DRAM供需缺口4.9%（15年來最嚴重）<br>
+      HBM缺貨預測：至2028年持續短缺，Blackwell/Rubin GPU拉動
+    </div>
+
+    <div class="section-label">經理人診斷</div>
+    <div class="analysis-text">
+      <b>【資產診斷】</b>：今日創52週新高$63.64，漲3.03%，技術面強勁突破，量能放大。HBM供需最嚴峻缺口驅動SK Hynix/Samsung/Micron三強齊漲，ETF受益最大化。<br>
+      <b>【技術指標】</b>：突破前高，RSI偏強，趨勢向上明確。布林帶大幅開口向上，短期動能強勁。<br>
+      <b>【風控建議】</b>：突破新高進場，守$59.91（今日低點），目標$70+。注意若SK Hynix/Micron法說轉差則快速出場。
+    </div>
+
+    <div class="section-label">產業消息</div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 SK Hynix HBM3E缺貨至2028，Q1利潤率72%，市場震驚</div>
+      <div class="news-meta">TradingKey ｜ 2026-05</div>
+    </div>
+    <div class="news-item news-pos">
+      <div class="news-title">🟢 Goldman Sachs：2026 DRAM缺口4.9%，15年最嚴峻，報價飆升70-80%</div>
+      <div class="news-meta">S&P Global / The Register ｜ 2026-01</div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-row">進場區間 <span>$60–$63（突破新高後）</span></div>
+      <div class="action-row">停損 <span>跌破 $59.91</span></div>
+      <div class="action-row">目標 <span>$70–$75</span></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end us grid -->
+
+</div><!-- end container -->
+
+<div class="footer">
+  <p>📊 每日市場監測報告 ｜ 2026-05-29 ｜ 資料來源：TWSE 官方 API、Yahoo Finance、WebSearch</p>
+  <p style="margin-top:6px;">⚠️ 三大法人數據基準：5/28（TWSE T86）｜ 本報告僅供參考，不構成投資建議</p>
+  <p style="margin-top:6px;"><a href="https://teetzyyyang-910.github.io/stockmarket_report/" target="_blank">🔗 GitHub Pages 線上版本</a></p>
+</div>
+
+</body>
+</html>
