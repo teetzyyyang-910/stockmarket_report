@@ -457,6 +457,17 @@ const GITHUB_REPO = 'stockmarket_report';       // ← 改成您的 GitHub 倉�
 const GITHUB_BRANCH = 'main';          // 通常是 main 或 master
 /* ════════════════════════════════════════ */
 
+// 每日訊號摘要（格式：{ fire, watch, exit }）
+const SIGNALS_MAP = {
+  '20260601': { fire: 4, watch: 6, exit: 2 },  // 0056🔥 2317🔥 MSFT🔥 DRAM🔥 ｜ 2449🚨 NOK🚨
+  '20260529': { fire: 1, watch: 5, exit: 0 },
+  '20260528': { fire: 2, watch: 4, exit: 1 },
+  '20260527': { fire: 1, watch: 5, exit: 1 },
+  '20260526': { fire: 2, watch: 4, exit: 1 },
+  '20260525': { fire: 2, watch: 5, exit: 0 },
+  '20260522': { fire: 1, watch: 5, exit: 1 },
+};
+
 const IS_CONFIGURED = GITHUB_USER !== 'YOUR_USERNAME';
 const API_BASE = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents`;
 const PAGES_BASE = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}`;
@@ -488,20 +499,19 @@ function renderLatestCard(file) {
   document.getElementById('latest-sub').textContent = date.display;
   document.getElementById('latest-date-stat').textContent = date.display;
   document.getElementById('btn-latest').href = reportUrl;
+  const sig = SIGNALS_MAP[date.year + date.month + date.day] || { fire: 0, watch: 0, exit: 0 };
+  const sigChips = [
+    sig.fire > 0 ? `<span class="sig-chip fire">🔥 進場 ×${sig.fire}</span>` : '',
+    sig.watch > 0 ? `<span class="sig-chip wait">⏳ 觀望 ×${sig.watch}</span>` : '',
+    sig.exit > 0 ? `<span class="sig-chip exit">🚨 出場 ×${sig.exit}</span>` : '',
+  ].filter(Boolean).join('');
   document.getElementById('latest-card-container').innerHTML = `
     <div class="latest-card">
       <div>
         <div class="latest-label">🔥 最新報告</div>
         <div class="latest-date">${date.display}</div>
         <div class="latest-meta">${formatDateDisplay(date.raw)}</div>
-        <div class="latest-signals">
-          <span class="sig-chip fire">🔥 進場訊號</span>
-          <span class="sig-chip wait">⏳ 觀望</span>
-          <span class="sig-chip wait">⏳ 觀望</span>
-          <span class="sig-chip wait">⏳ 觀望</span>
-          <span class="sig-chip wait">⏳ 觀望</span>
-          <span class="sig-chip wait">⏳ 觀望</span>
-        </div>
+        <div class="latest-signals">${sigChips}</div>
       </div>
       <a href="${reportUrl}" class="btn-view" target="_blank">查看報告 →</a>
     </div>`;
@@ -527,8 +537,7 @@ function renderTable(files) {
         <td><span class="report-date">${date.display}</span>${isNew ? '<span class="report-new">NEW</span>' : ''}</td>
         <td>${formatDateDisplay(date.raw)}</td>
         <td class="signals-cell">
-          <span class="mini-chip fire">🔥 1</span>
-          <span class="mini-chip wait">⏳ 5</span>
+          ${(() => { const s = SIGNALS_MAP[date.year+date.month+date.day]||{}; return [s.fire>0?`<span class="mini-chip fire">🔥 ${s.fire}</span>`:'', s.watch>0?`<span class="mini-chip wait">⏳ ${s.watch}</span>`:'', s.exit>0?`<span class="mini-chip exit">🚨 ${s.exit}</span>`:''].filter(Boolean).join(''); })()}
         </td>
         <td>
           <a href="${reportUrl}" class="report-link" target="_blank">
